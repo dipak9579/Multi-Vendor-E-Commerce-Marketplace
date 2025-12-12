@@ -3,6 +3,7 @@ package com.dipak.auth_service.service;
 import com.dipak.auth_service.dto.AuthResponse;
 import com.dipak.auth_service.dto.LoginRequest;
 import com.dipak.auth_service.dto.RegisterRequest;
+import com.dipak.auth_service.dto.RegisterResponse;
 import com.dipak.auth_service.entity.AppUser;
 import com.dipak.auth_service.entity.Role;
 import com.dipak.auth_service.repository.UserRepository;
@@ -15,53 +16,46 @@ import org.springframework.security.core.Authentication;
 @Service
 public class AuthService {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final UserRepository repo;
+    private final PasswordEncoder encoder;
     private final JwtService jwtService;
-    private final AuthenticationManager authenticationManager;
+    private final AuthenticationManager authManager;
 
-    public AuthService(UserRepository userRepository,
-                       PasswordEncoder passwordEncoder,
-                       JwtService jwtService,
-                       AuthenticationManager authenticationManager) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+    public AuthService(UserRepository repo, PasswordEncoder encoder, JwtService jwtService, AuthenticationManager authManager) {
+        this.repo = repo;
+        this.encoder = encoder;
         this.jwtService = jwtService;
-        this.authenticationManager = authenticationManager;
+        this.authManager = authManager;
     }
 
-    public AuthResponse register(RegisterRequest req) {
-        if (userRepository.existsByUsername(req.getUsername())) {
-            throw new IllegalArgumentException("Username already taken");
-        }
-        if (userRepository.existsByEmail(req.getEmail())) {
-            throw new IllegalArgumentException("Email already registered");
-        }
+    public RegisterResponse register(RegisterRequest req) {
+        if (repo.existsByUsername(req.getUsername()))
+            throw new RuntimeException("Username taken");
 
-        Role role = Role.ROLE_CUSTOMER;
-        if (req.getRole() != null && req.getRole().equalsIgnoreCase("SELLER")) {
-            role = Role.ROLE_SELLER;
-        }
+        Role role = switch (req.getRole().toUpperCase()) {
+            case "SELLER" -> Role.ROLE_SELLER;
+            case "ADMIN" -> Role.ROLE_ADMIN;
+            default -> Role.ROLE_CUSTOMER;
+        };
 
         AppUser user = AppUser.builder()
                 .username(req.getUsername())
                 .email(req.getEmail())
-                .password(passwordEncoder.encode(req.getPassword()))
+                .password(encoder.encode(req.getPassword()))
                 .role(role)
                 .build();
 
-        userRepository.save(user);
+        repo.save(user);
 
-        String token = jwtService.generateToken(user.getUsername());
-        return new AuthResponse(token);
+        return new RegisterResponse("User registered successfully");
     }
 
+
     public AuthResponse login(LoginRequest req) {
-        Authentication auth = authenticationManager.authenticate(
+        authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(req.getUsername(), req.getPassword())
         );
 
-        String token = jwtService.generateToken(auth.getName());
-        return new AuthResponse(token);
+        return new AuthResponse(jwtService.generateToken(req.getUsername()));
     }
 }

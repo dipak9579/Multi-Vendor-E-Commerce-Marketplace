@@ -10,8 +10,8 @@ import java.util.Map;
 @RequestMapping("/api/test")
 public class TestController {
 
-    @GetMapping("/protected")
-    public Map<String, String> protectedEndpoint() {
-        return Map.of("message", "You are authenticated");
+    @GetMapping("/secure")
+    public Map<String, String> secure() {
+        return Map.of("status", "Authenticated Successfully");
     }
 }

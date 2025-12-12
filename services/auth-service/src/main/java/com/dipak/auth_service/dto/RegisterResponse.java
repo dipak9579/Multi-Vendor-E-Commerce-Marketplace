@@ -1,11 +1,10 @@
 package com.dipak.auth_service.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.Data;
+
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
-public class AuthResponse {
-    private String token;
+public class RegisterResponse {
+    private String message;
 }

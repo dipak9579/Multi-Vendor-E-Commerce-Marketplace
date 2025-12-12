@@ -11,19 +11,19 @@ public class AuthController {
 
     private final AuthService authService;
 
-    public AuthController(AuthService svc) {
-        this.authService = svc;
+    public AuthController(AuthService authService) {
+        this.authService = authService;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest req) {
-        AuthResponse res = authService.register(req);
-        return ResponseEntity.ok(res);
+    public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest request) {
+        RegisterResponse response = authService.register(request);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest req) {
-        AuthResponse res = authService.login(req);
-        return ResponseEntity.ok(res);
+    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
+        AuthResponse response = authService.login(request);
+        return ResponseEntity.ok(response);
     }
 }

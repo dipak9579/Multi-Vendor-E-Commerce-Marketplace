@@ -5,16 +5,18 @@ spring:
   application:
     name: auth-service
 
-# datasource using env variables (you have .env at repo root)
-
   datasource:
-    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:ecommerce}
+    url: jdbc:mysql://${MYSQL_HOST:127.0.0.1}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:ecommerce}?useSSL=false&allowPublicKeyRetrieval=true&autoReconnect=true
     username: ${MYSQL_USER:root}
-    password: ${MYSQL_PASSWORD:password}
+    password: ${MYSQL_PASSWORD:dipak}
+
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
 
 eureka:
   client:
@@ -23,18 +25,12 @@ eureka:
   instance:
     prefer-ip-address: true
 
+jwt:
+  secret: ${JWT_SECRET:Y8fT!p3L9zQw#2RnVb7@cP4mH$kD1sXpZ6eR0uJ}
+  expiration: ${JWT_EXPIRATION:86400000}
+
 management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics
-  endpoint:
-    health:
-      show-details: ALWAYS
-
-# JWT values loaded from environment
-jwt:
-  secret: ${JWT_SECRET:Y8fT!p3L9zQw#2RnVb7@cP4mH$kD1sXpZ6eR0uJ}
-  expiration: ${JWT_EXPIRATION:86400000} # 24 hours in ms
-
-
+        include: "*"
