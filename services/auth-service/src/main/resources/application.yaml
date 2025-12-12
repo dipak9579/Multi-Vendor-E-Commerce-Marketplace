@@ -1,0 +1,40 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: auth-service
+
+# datasource using env variables (you have .env at repo root)
+
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:ecommerce}
+    username: ${MYSQL_USER:root}
+    password: ${MYSQL_PASSWORD:password}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+  instance:
+    prefer-ip-address: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+# JWT values loaded from environment
+jwt:
+  secret: ${JWT_SECRET:Y8fT!p3L9zQw#2RnVb7@cP4mH$kD1sXpZ6eR0uJ}
+  expiration: ${JWT_EXPIRATION:86400000} # 24 hours in ms
+
+
