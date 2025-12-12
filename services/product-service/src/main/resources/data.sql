@@ -1,0 +1,16 @@
+INSERT INTO categories (name) VALUES
+('Electronics'),
+('Mobiles'),
+('Laptops'),
+('Home Appliances'),
+('Fashion'),
+('Men Clothing'),
+('Women Clothing'),
+('Beauty & Health'),
+('Sports & Fitness'),
+('Books'),
+('Groceries'),
+('Toys'),
+('Furniture'),
+('Stationery'),
+('Automotive Accessories');

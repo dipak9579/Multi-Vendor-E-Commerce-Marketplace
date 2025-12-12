@@ -26,4 +26,10 @@ public class AuthController {
         AuthResponse response = authService.login(request);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/exists/seller/{id}")
+    public ResponseEntity<Boolean> sellerExists(@PathVariable Long id) {
+        return ResponseEntity.ok(authService.sellerExists(id));
+    }
+
 }
